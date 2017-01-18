@@ -1,7 +1,19 @@
+Run locally
+
+```
+python ./stock-ticker.py
+```
+
+Install deps
+
+```
+pip install lxml -t ~/dev/personal/stock-ticker
+```
+
 Create zip file for deployment
 
 ```
-rm ../stock-ticker.zip && zip -r ../stock-ticker.zip . -x ".git/*"
+rm ../stock-ticker.zip && zip -qr ../stock-ticker.zip . -x ".git/*"
 ```
 
 Push new source code for lambda
