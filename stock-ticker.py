@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from googlefinance import getQuotes
-from lxml import etree
-import requests
+from lib.googlefinance import getQuotes
+from lib.lxml import etree
+from lib.requests import get, post
 
 
 # http://finance.google.com/finance/info?client=ig&q=FRA:CXH
@@ -22,7 +22,7 @@ def get_stock_quote(stock_symbol):
 
 
 def get_exchange_rate(currency_code):
-    r = requests.get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml')
+    r = get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml')
     xml = r.text
     xml = xml.replace('<?xml version="1.0" encoding="UTF-8"?>', '<?xml version="1.0"?>')
     xml = xml.replace('<gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">', '<Envelope>')
@@ -41,7 +41,7 @@ def send_to_elasticsearch(update_date, value, currency_code):
     }
     print('data_struct:')
     print(data_struct)
-    r = requests.post(ES_ENDPOINT_URL, data = data_struct)
+    r = post(ES_ENDPOINT_URL, data = data_struct)
     print r.status_code
     r.raise_for_status()
     return
