@@ -11,18 +11,19 @@ from lib.requests import get, post
 
 print('Loading function')
 
-
-NUM_STOCKS = 3500.0
+ECB_URL = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml'
 ES_ENDPOINT_URL = 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southeast-2.es.amazonaws.com/stock-ticker/stock-value'
 
+NUM_STOCKS = 3500.0
 
-def get_stock_quote(stock_symbol):
-    response = getQuotes('FRA:CXH')
+
+def get_stock_quote(exchange, stock):
+    response = getQuotes(exchange + ':' + stock)
     return response[0]['LastTradePrice']
 
 
 def get_exchange_rate(currency_code):
-    r = get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml')
+    r = get(ECB_URL)
     xml = r.text
     xml = xml.replace('<?xml version="1.0" encoding="UTF-8"?>', '<?xml version="1.0"?>')
     xml = xml.replace('<gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">', '<Envelope>')
@@ -34,13 +35,8 @@ def get_exchange_rate(currency_code):
 
 
 def send_to_elasticsearch(update_date, value, currency_code):
-    data_struct = {
-        'update_date' : update_date,
-        'value' : value,
-        'currency': currency_code
-    }
-    print('data_struct:')
-    print(data_struct)
+    data_struct = '{ "update_date": "' + str(update_date) + '" ,"value": "' + str(value) + '" ,"currency": "' + str(currency_code) + '" }'
+    print('data_struct:' + data_struct)
     r = post(ES_ENDPOINT_URL, data = data_struct)
     print r.status_code
     r.raise_for_status()
@@ -51,15 +47,15 @@ def lambda_handler(event, context):
     currency_code = 'AUD'
     now = datetime.utcnow().isoformat()
 
-    stock_quote_eur = float(get_stock_quote('FRA:CXH'))
+    stock_quote_eur = float(get_stock_quote('FRA', 'CXH'))
     print('Quote (EUR): ' + str(stock_quote_eur))
-    
+
     rate_eur_to_aud = float(get_exchange_rate(currency_code))
     print('Rate (EUR->' + currency_code + '): ' + str(rate_eur_to_aud))
-    
+
     stock_value_aud = stock_quote_eur * rate_eur_to_aud
     print('Stock value (' + currency_code + '): ' + str(stock_value_aud))
-    
+
     total_stock_value_aud = NUM_STOCKS * stock_value_aud
     print('Total stock value (' + currency_code + '): ' + str(total_stock_value_aud))
     

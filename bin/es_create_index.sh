@@ -1,4 +1,9 @@
-curl -s -XPUT 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southeast-2.es.amazonaws.com/stock-ticker' -d '
+#!/bin/bash
+
+index_name="stock-ticker"
+
+echo "Creating index: ${index_name}"
+curl -s -XPUT 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southeast-2.es.amazonaws.com/${index_name}' -d '
 {
  "mappings" : {
   "stock-value" : {
@@ -10,4 +15,4 @@ curl -s -XPUT 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southea
   }
  }
 }' | jq .
-curl -s -XGET 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southeast-2.es.amazonaws.com/stock-ticker' | jq .
+curl -s -XGET 'https://search-stock-ticker-hihtqyk272pvyvup7j2gfatg4y.ap-southeast-2.es.amazonaws.com/${index_name}' | jq .
