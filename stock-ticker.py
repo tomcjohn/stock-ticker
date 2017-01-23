@@ -36,10 +36,9 @@ def get_exchange_rate(currency_code):
 
 def send_to_elasticsearch(update_date, value, currency_code):
     data_struct = '{ "update_date": "' + str(update_date) + '" ,"value": "' + str(value) + '" ,"currency": "' + str(currency_code) + '" }'
-    print('data_struct:' + data_struct)
     r = post(ES_ENDPOINT_URL, data = data_struct)
-    print r.status_code
     r.raise_for_status()
+    print("Elasticsearch response: " + str(r.status_code))
     return
 
 
