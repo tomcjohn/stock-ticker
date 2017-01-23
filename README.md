@@ -7,7 +7,7 @@ python ./stock-ticker.py
 Install deps
 
 ```
-pip install googlefinance lxml requests -t ./lib
+pip install googlefinance lxml requests -t .
 ```
 
 Create zip file for deployment

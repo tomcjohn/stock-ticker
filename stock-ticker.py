@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from lib.googlefinance import getQuotes
-from lib.lxml import etree
-from lib.requests import get, post
+from googlefinance import getQuotes
+from lxml import etree
+from requests import get, post
 
 
 # http://finance.google.com/finance/info?client=ig&q=FRA:CXH
