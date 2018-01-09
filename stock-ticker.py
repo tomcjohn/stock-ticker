@@ -26,9 +26,8 @@ def get_stock_quote():
     r = get(ALPHAVANTAGE_URL)
     json_str = r.text
     parsed_json = json.loads(json_str)
-    # most recent stock value available from AlphaVantage is yesterday's
-    yesterday = date.today() - timedelta(1)
-    return parsed_json['Time Series (Daily)'][str(yesterday)]['4. close']
+    last_refreshed = parsed_json['Meta Data']['3. Last Refreshed']
+    return parsed_json['Time Series (Daily)'][str(last_refreshed)]['4. close']
 
 
 def download_exchange_rates():
