@@ -27,7 +27,8 @@ def get_stock_quote():
     json_str = r.text
     parsed_json = json.loads(json_str)
     last_refreshed = parsed_json['Meta Data']['3. Last Refreshed']
-    return parsed_json['Time Series (Daily)'][str(last_refreshed)]['4. close']
+    print 'Using stock quote as at: ' + last_refreshed
+    return parsed_json['Time Series (Daily)'][last_refreshed]['4. close']
 
 
 def download_exchange_rates():
@@ -78,7 +79,7 @@ def lambda_handler(event, context):
     total_stock_value_aud = NUM_STOCKS * stock_value_aud
     print('Total stock value (AUD): ' + str(total_stock_value_aud))
 
-    send_to_elasticsearch(now, total_stock_value_aud, AUD)
+    # send_to_elasticsearch(now, total_stock_value_aud, AUD)
 
     return total_stock_value_aud
 
